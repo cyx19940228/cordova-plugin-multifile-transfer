@@ -26,7 +26,7 @@
     <description>Cordova File Transfer Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova,file,transfer</keywords>
-    <repo>https://git-wip-us.apache.org/repos/asf/cordova-plugin-file-transfer.git</repo>
+    <repo>https://github.com/tommychen1228/cordova-plugin-multifile-transfer.git</repo>
     <issue>https://issues.apache.org/jira/browse/CB/component/12320650</issue>
 
     <dependency id="cordova-plugin-file" version="^3.0.0" />
