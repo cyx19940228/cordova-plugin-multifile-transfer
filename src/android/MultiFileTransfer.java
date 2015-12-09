@@ -336,8 +336,8 @@ public class MultiFileTransfer extends CordovaPlugin {
                 int fixedLength = -1;
                 try {
                     // Create return object
-                    FileUploadResult result = new FileUploadResult();
-                    FileProgressResult progress = new FileProgressResult();
+                    MultiFileUploadResult result = new MultiFileUploadResult();
+                    MultiFileProgressResult progress = new MultiFileProgressResult();
 
                     //------------------ CLIENT REQUEST
                     // Open a HTTP connection to the URL based on protocol
