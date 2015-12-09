@@ -818,7 +818,7 @@ public class MultiFileTransfer extends CordovaPlugin {
 
                     Log.d(LOG_TAG, "Download file:" + sourceUri);
 
-                    FileProgressResult progress = new FileProgressResult();
+                    MultiFileProgressResult progress = new MultiFileProgressResult();
 
                     if (isLocalTransfer) {
                         readResult = resourceApi.openForRead(sourceUri);
