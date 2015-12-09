@@ -16,7 +16,7 @@
        specific language governing permissions and limitations
        under the License.
 */
-package org.apache.cordova.filetransfer;
+package org.apache.cordova.multifiletransfer;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -66,9 +66,9 @@ import android.os.Build;
 import android.util.Log;
 import android.webkit.CookieManager;
 
-public class FileTransfer extends CordovaPlugin {
+public class MultiFileTransfer extends CordovaPlugin {
 
-    private static final String LOG_TAG = "FileTransfer";
+    private static final String LOG_TAG = "MultiFileTransfer";
     private static final String LINE_START = "--";
     private static final String LINE_END = "\r\n";
     private static final String BOUNDARY =  "+++++";

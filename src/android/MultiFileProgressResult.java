@@ -16,7 +16,7 @@
        specific language governing permissions and limitations
        under the License.
 */
-package org.apache.cordova.filetransfer;
+package org.apache.cordova.multifiletransfer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 /**
  * Encapsulates in-progress status of uploading or downloading a file to a remote server.
  */
-public class FileProgressResult {
+public class MultiFileProgressResult {
 
     private boolean lengthComputable = false; // declares whether total is known
     private long loaded = 0;                  // bytes sent so far

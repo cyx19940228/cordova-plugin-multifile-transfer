@@ -16,7 +16,7 @@
        specific language governing permissions and limitations
        under the License.
 */
-package org.apache.cordova.filetransfer;
+package org.apache.cordova.multifiletransfer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 /**
  * Encapsulates the result and/or status of uploading a file to a remote server.
  */
-public class FileUploadResult {
+public class MultiFileUploadResult {
 
     private long bytesSent = 0;         // bytes sent
     private int responseCode = -1;      // HTTP response code

@@ -26,24 +26,24 @@
     <description>Cordova File Transfer Plugin</description>
     <license>Apache 2.0</license>
     <keywords>cordova,file,transfer</keywords>
-    <repo>https://git-wip-us.apache.org/repos/asf/cordova-plugin-file-transfer.git</repo>
+    <repo>https://github.com/tommychen1228/cordova-plugin-multifile-transfer.git</repo>
     <issue>https://issues.apache.org/jira/browse/CB/component/12320650</issue>
 
     <dependency id="cordova-plugin-file" version="^3.0.0" />
 
-    <js-module src="www/FileTransferError.js" name="FileTransferError">
-        <clobbers target="window.FileTransferError" />
+    <js-module src="www/MultiFileTransferError.js" name="MultiFileTransferError">
+        <clobbers target="window.MultiFileTransferError" />
     </js-module>
 
-    <js-module src="www/FileTransfer.js" name="FileTransfer">
-        <clobbers target="window.FileTransfer" />
+    <js-module src="www/MultiFileTransfer.js" name="MultiFileTransfer">
+        <clobbers target="window.MultiFileTransfer" />
     </js-module>
 
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="FileTransfer" >
-                <param name="android-package" value="org.apache.cordova.multifiletransfer.FileTransfer"/>
+            <feature name="MultiFileTransfer" >
+                <param name="android-package" value="org.apache.cordova.multifiletransfer.MultiFileTransfer"/>
             </feature>
         </config-file>
 
@@ -51,21 +51,21 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
 
-        <source-file src="src/android/FileTransfer.java" target-dir="src/org/apache/cordova/filetransfer" />
-        <source-file src="src/android/FileProgressResult.java" target-dir="src/org/apache/cordova/filetransfer" />
-        <source-file src="src/android/FileUploadResult.java" target-dir="src/org/apache/cordova/filetransfer" />
+        <source-file src="src/android/MultiFileTransfer.java" target-dir="src/org/apache/cordova/multifiletransfer" />
+        <source-file src="src/android/MultiFileProgressResult.java" target-dir="src/org/apache/cordova/multifiletransfer" />
+        <source-file src="src/android/MultiFileUploadResult.java" target-dir="src/org/apache/cordova/multifiletransfer" />
     </platform>
 
 
     <!-- ios -->
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
-            <feature name="FileTransfer">
+            <feature name="MultiFileTransfer">
                 <param name="ios-package" value="CDVMultiFileTransfer" />
             </feature>
         </config-file>
-        <header-file src="src/ios/CDVFileTransfer.h" />
-        <source-file src="src/ios/CDVFileTransfer.m" />
+        <header-file src="src/ios/CDVMultiFileTransfer.h" />
+        <source-file src="src/ios/CDVMultiFileTransfer.m" />
 
         <framework src="AssetsLibrary.framework" />
     </platform>
