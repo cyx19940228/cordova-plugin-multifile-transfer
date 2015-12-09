@@ -46,7 +46,7 @@ extern NSString* const kOptionsKeyCookie;
 - (NSString*)escapePathComponentForUrlString:(NSString*)urlString;
 
 // Visible for testing.
-- (NSURLRequest*)requestForUploadCommand:(CDVInvokedUrlCommand*)command fileData:(NSData*)fileData;
+- (NSURLRequest*)requestForUploadCommand:(CDVInvokedUrlCommand*)command fileData:(NSArray *)fileDatas;
 - (NSMutableDictionary*)createFileTransferError:(int)code AndSource:(NSString*)source AndTarget:(NSString*)target;
 
 - (NSMutableDictionary*)createFileTransferError:(int)code
