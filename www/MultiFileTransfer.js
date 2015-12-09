@@ -99,7 +99,7 @@ var MultiFileTransfer = function() {
 * @param trustAllHosts {Boolean} Optional trust all hosts (e.g. for self-signed certs), defaults to false
 */
 MultiFileTransfer.prototype.upload = function(filePath, server, successCallback, errorCallback, options, trustAllHosts) {
-    argscheck.checkArgs('ssFFO*', 'MultiFileTransfer.upload', arguments);
+    //argscheck.checkArgs('ssFFO*', 'MultiFileTransfer.upload', arguments);
     // check for options
     var fileKey = null;
     var fileName = null;
