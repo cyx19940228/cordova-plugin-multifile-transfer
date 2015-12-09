@@ -21,7 +21,7 @@
 
 var argscheck = require('cordova/argscheck'),
     exec = require('cordova/exec'),
-    FileTransferError = require('./FileTransferError'),
+    FileTransferError = require('./MultiFileTransferError'),
     ProgressEvent = require('cordova-plugin-file.ProgressEvent');
 
 function newProgressEvent(result) {
@@ -83,7 +83,7 @@ var idCounter = 0;
  * FileTransfer uploads a file to a remote server.
  * @constructor
  */
-var FileTransfer = function() {
+var MultiFileTransfer = function() {
     this._id = ++idCounter;
     this.onprogress = null; // optional callback
 };
@@ -98,8 +98,8 @@ var FileTransfer = function() {
 * @param options {FileUploadOptions} Optional parameters such as file name and mimetype
 * @param trustAllHosts {Boolean} Optional trust all hosts (e.g. for self-signed certs), defaults to false
 */
-FileTransfer.prototype.upload = function(filePath, server, successCallback, errorCallback, options, trustAllHosts) {
-    argscheck.checkArgs('ssFFO*', 'FileTransfer.upload', arguments);
+MultiFileTransfer.prototype.upload = function(filePath, server, successCallback, errorCallback, options, trustAllHosts) {
+    argscheck.checkArgs('ssFFO*', 'MultiFileTransfer.upload', arguments);
     // check for options
     var fileKey = null;
     var fileName = null;
@@ -145,7 +145,7 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
     }
 
     var fail = errorCallback && function(e) {
-        var error = new FileTransferError(e.code, e.source, e.target, e.http_status, e.body, e.exception);
+        var error = new MultiFileTransferError(e.code, e.source, e.target, e.http_status, e.body, e.exception);
         errorCallback(error);
     };
 
@@ -159,7 +159,7 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
             successCallback && successCallback(result);
         }
     };
-    exec(win, fail, 'FileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, trustAllHosts, chunkedMode, headers, this._id, httpMethod]);
+    exec(win, fail, 'MultiFileTransfer', 'upload', [filePath, server, fileKey, fileName, mimeType, params, trustAllHosts, chunkedMode, headers, this._id, httpMethod]);
 };
 
 /**
@@ -171,8 +171,8 @@ FileTransfer.prototype.upload = function(filePath, server, successCallback, erro
  * @param trustAllHosts {Boolean} Optional trust all hosts (e.g. for self-signed certs), defaults to false
  * @param options {FileDownloadOptions} Optional parameters such as headers
  */
-FileTransfer.prototype.download = function(source, target, successCallback, errorCallback, trustAllHosts, options) {
-    argscheck.checkArgs('ssFF*', 'FileTransfer.download', arguments);
+MultiFileTransfer.prototype.download = function(source, target, successCallback, errorCallback, trustAllHosts, options) {
+    argscheck.checkArgs('ssFF*', 'MultiFileTransfer.download', arguments);
     var self = this;
 
     var basicAuthHeader = getBasicAuthHeader(source);
@@ -221,15 +221,15 @@ FileTransfer.prototype.download = function(source, target, successCallback, erro
         errorCallback(error);
     };
 
-    exec(win, fail, 'FileTransfer', 'download', [source, target, trustAllHosts, this._id, headers]);
+    exec(win, fail, 'MultiFileTransfer', 'download', [source, target, trustAllHosts, this._id, headers]);
 };
 
 /**
  * Aborts the ongoing file transfer on this object. The original error
  * callback for the file transfer will be called if necessary.
  */
-FileTransfer.prototype.abort = function() {
-    exec(null, null, 'FileTransfer', 'abort', [this._id]);
+MultiFileTransfer.prototype.abort = function() {
+    exec(null, null, 'MultiFileTransfer', 'abort', [this._id]);
 };
 
-module.exports = FileTransfer;
+module.exports = MultiFileTransfer;

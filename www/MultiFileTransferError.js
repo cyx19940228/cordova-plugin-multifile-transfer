@@ -20,10 +20,10 @@
 */
 
 /**
- * FileTransferError
+ * MultiFileTransferError
  * @constructor
  */
-var FileTransferError = function(code, source, target, status, body, exception) {
+var MultiFileTransferError = function(code, source, target, status, body, exception) {
     this.code = code || null;
     this.source = source || null;
     this.target = target || null;
@@ -32,10 +32,10 @@ var FileTransferError = function(code, source, target, status, body, exception) 
     this.exception = exception || null;
 };
 
-FileTransferError.FILE_NOT_FOUND_ERR = 1;
-FileTransferError.INVALID_URL_ERR = 2;
-FileTransferError.CONNECTION_ERR = 3;
-FileTransferError.ABORT_ERR = 4;
-FileTransferError.NOT_MODIFIED_ERR = 5;
+MultiFileTransferError.FILE_NOT_FOUND_ERR = 1;
+MultiFileTransferError.INVALID_URL_ERR = 2;
+MultiFileTransferError.CONNECTION_ERR = 3;
+MultiFileTransferError.ABORT_ERR = 4;
+MultiFileTransferError.NOT_MODIFIED_ERR = 5;
 
-module.exports = FileTransferError;
+module.exports = MultiFileTransferError;
