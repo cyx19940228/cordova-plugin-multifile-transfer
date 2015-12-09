@@ -6,16 +6,7 @@
     "id": "cordova-plugin-multifile-transfer",
     "platforms": [
       "android",
-      "amazon-fireos",
-      "ubuntu",
-      "blackberry10",
-      "ios",
-      "wp7",
-      "wp8",
-      "windows8",
-      "windows",
-      "firefoxos",
-      "browser"
+      "ios"
     ]
   },
   "scripts": {
