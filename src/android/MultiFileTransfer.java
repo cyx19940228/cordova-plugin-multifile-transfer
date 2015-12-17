@@ -316,37 +316,44 @@ public class MultiFileTransfer extends CordovaPlugin {
 
         final Uri targetUri = resourceApi.remapUri(Uri.parse(target));
         // Accept a path or a URI for the source.
-        final String source = sources.getString(0);
-
+        boolean useHttpsTemp = false;
         final ArrayList<Uri> sourceUris = new ArrayList<Uri>();
-        for (int i = 0; i < sources.length(); i++) {
-            Uri tmpSrc = Uri.parse(source);
-            final Uri sourceUri = resourceApi.remapUri(
-                    tmpSrc.getScheme() != null ? tmpSrc : Uri.fromFile(new File(source)));
 
-            sourceUris.add(sourceUri);
+        if(sources.length() > 0){
+            String source = sources.getString(0);
+
+            for (int i = 0; i < sources.length(); i++) {
+                Uri tmpSrc = Uri.parse(source);
+                final Uri sourceUri = resourceApi.remapUri(
+                        tmpSrc.getScheme() != null ? tmpSrc : Uri.fromFile(new File(source)));
+
+                sourceUris.add(sourceUri);
+            }
+
+            int uriType = CordovaResourceApi.getUriType(targetUri);
+            useHttpsTemp = uriType == CordovaResourceApi.URI_TYPE_HTTPS;
+            if (uriType != CordovaResourceApi.URI_TYPE_HTTP && !useHttpsTemp) {
+                JSONObject error = createFileTransferError(INVALID_URL_ERR, source, target, null, 0, null);
+                Log.e(LOG_TAG, "Unsupported URI: " + targetUri);
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
+                return;
+            }
         }
 
+        final RequestContext context = new RequestContext("", target, callbackContext);
 
-        int uriType = CordovaResourceApi.getUriType(targetUri);
-        final boolean useHttps = uriType == CordovaResourceApi.URI_TYPE_HTTPS;
-        if (uriType != CordovaResourceApi.URI_TYPE_HTTP && !useHttps) {
-            JSONObject error = createFileTransferError(INVALID_URL_ERR, source, target, null, 0, null);
-            Log.e(LOG_TAG, "Unsupported URI: " + targetUri);
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
-            return;
-        }
-
-        final RequestContext context = new RequestContext(source, target, callbackContext);
         synchronized (activeRequests) {
             activeRequests.put(objectId, context);
         }
 
+        final boolean useHttps = useHttpsTemp;
+
         cordova.getThreadPool().execute(new Runnable() {
+
             public void run() {
-                if (context.aborted) {
-                    return;
-                }
+                //if (context.aborted) {
+                //    return;
+                //}
                 HttpURLConnection conn = null;
                 HostnameVerifier oldHostnameVerifier = null;
                 SSLSocketFactory oldSocketFactory = null;
@@ -487,12 +494,12 @@ public class MultiFileTransfer extends CordovaPlugin {
                     OutputStream sendStream = null;
                     try {
                         sendStream = conn.getOutputStream();
-                        synchronized (context) {
-                            if (context.aborted) {
-                                return;
-                            }
-                            context.connection = conn;
-                        }
+                        //synchronized (context) {
+                        //    if (context.aborted) {
+                        //        return;
+                        //    }
+                        //    context.connection = conn;
+                        //}
 
                         if (multipartFormUpload) {
                             //We don't want to change encoding, we just want this to write for all Unicode.
@@ -557,9 +564,9 @@ public class MultiFileTransfer extends CordovaPlugin {
                         }
                         safeClose(sendStream);
                     }
-                    synchronized (context) {
-                        context.connection = null;
-                    }
+                    //synchronized (context) {
+                    //    context.connection = null;
+                    //}
                     Log.d(LOG_TAG, "Sent " + totalBytes + " of " + fixedLength);
 
                     //------------------ read the SERVER RESPONSE
@@ -570,12 +577,12 @@ public class MultiFileTransfer extends CordovaPlugin {
                     TrackingInputStream inStream = null;
                     try {
                         inStream = getInputStream(conn);
-                        synchronized (context) {
-                            if (context.aborted) {
-                                return;
-                            }
-                            context.connection = conn;
-                        }
+                        //synchronized (context) {
+                        //    if (context.aborted) {
+                        //        return;
+                        //    }
+                        //    context.connection = conn;
+                        //}
 
                         ByteArrayOutputStream out = new ByteArrayOutputStream(Math.max(1024, conn.getContentLength()));
                         byte[] buffer = new byte[1024];
@@ -586,9 +593,9 @@ public class MultiFileTransfer extends CordovaPlugin {
                         }
                         responseString = out.toString("UTF-8");
                     } finally {
-                        synchronized (context) {
-                            context.connection = null;
-                        }
+                        //synchronized (context) {
+                        //    context.connection = null;
+                        //}
                         safeClose(inStream);
                     }
 
@@ -601,11 +608,11 @@ public class MultiFileTransfer extends CordovaPlugin {
 
                     context.sendPluginResult(new PluginResult(PluginResult.Status.OK, result.toJSONObject()));
                 } catch (FileNotFoundException e) {
-                    JSONObject error = createFileTransferError(FILE_NOT_FOUND_ERR, source, target, conn, e);
+                    JSONObject error = createFileTransferError(FILE_NOT_FOUND_ERR, sourceUris.toString(), target, conn, e);
                     Log.e(LOG_TAG, error.toString(), e);
                     context.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
                 } catch (IOException e) {
-                    JSONObject error = createFileTransferError(CONNECTION_ERR, source, target, conn, e);
+                    JSONObject error = createFileTransferError(CONNECTION_ERR, sourceUris.toString(), target, conn, e);
                     Log.e(LOG_TAG, error.toString(), e);
                     Log.e(LOG_TAG, "Failed after uploading " + totalBytes + " of " + fixedLength + " bytes.");
                     context.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
@@ -614,7 +621,7 @@ public class MultiFileTransfer extends CordovaPlugin {
                     context.sendPluginResult(new PluginResult(PluginResult.Status.JSON_EXCEPTION));
                 } catch (Throwable t) {
                     // Shouldn't happen, but will
-                    JSONObject error = createFileTransferError(CONNECTION_ERR, source, target, conn, t);
+                    JSONObject error = createFileTransferError(CONNECTION_ERR, sourceUris.toString(), target, conn, t);
                     Log.e(LOG_TAG, error.toString(), t);
                     context.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
                 } finally {
