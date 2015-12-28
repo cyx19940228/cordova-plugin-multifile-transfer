@@ -320,24 +320,27 @@ public class MultiFileTransfer extends CordovaPlugin {
         final ArrayList<Uri> sourceUris = new ArrayList<Uri>();
 
         if(sources.length() > 0){
-            String source = sources.getString(0);
 
             for (int i = 0; i < sources.length(); i++) {
+                String source = sources.getString(i);
+
                 Uri tmpSrc = Uri.parse(source);
                 final Uri sourceUri = resourceApi.remapUri(
                         tmpSrc.getScheme() != null ? tmpSrc : Uri.fromFile(new File(source)));
 
                 sourceUris.add(sourceUri);
+
+                int uriType = CordovaResourceApi.getUriType(targetUri);
+                useHttpsTemp = uriType == CordovaResourceApi.URI_TYPE_HTTPS;
+                if (uriType != CordovaResourceApi.URI_TYPE_HTTP && !useHttpsTemp) {
+                    JSONObject error = createFileTransferError(INVALID_URL_ERR, source, target, null, 0, null);
+                    Log.e(LOG_TAG, "Unsupported URI: " + targetUri);
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
+                    return;
+                }
             }
 
-            int uriType = CordovaResourceApi.getUriType(targetUri);
-            useHttpsTemp = uriType == CordovaResourceApi.URI_TYPE_HTTPS;
-            if (uriType != CordovaResourceApi.URI_TYPE_HTTP && !useHttpsTemp) {
-                JSONObject error = createFileTransferError(INVALID_URL_ERR, source, target, null, 0, null);
-                Log.e(LOG_TAG, "Unsupported URI: " + targetUri);
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.IO_EXCEPTION, error));
-                return;
-            }
+
         }
 
         final RequestContext context = new RequestContext("", target, callbackContext);
